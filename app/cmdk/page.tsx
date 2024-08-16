@@ -2,32 +2,93 @@
 
 import { useState } from "react";
 
+import { TbDeviceTabletSearch } from "react-icons/tb";
+import { CiLight } from "react-icons/ci";
+import { IoSettingsOutline } from "react-icons/io5";
+import { GoPersonAdd } from "react-icons/go";
+import { GoPencil } from "react-icons/go";
+import { MdOutlineDrafts } from "react-icons/md";
+
 import { useTheme } from "next-themes";
 
 import { motion, AnimatePresence } from "framer-motion";
 
 import FirstModal from "@/components/cmdk/FirstModal";
 import SecondaryModal from "@/components/cmdk/SecondaryModal";
+import Kbd from "@/components/cmdk/Kbd";
 
 export const items = [
   {
     id: 1,
-    name: "Item 1",
+    name: "Search for blogs",
+    startContent: (
+      <div className="flex items-center aspect-square p-1 justify-center border rounded-md">
+        <TbDeviceTabletSearch size={14} />
+      </div>
+    ),
+    endContent: <Kbd>S</Kbd>,
   },
   {
     id: 2,
-    name: "Item 2",
+    name: "Toggle theme",
+    startContent: (
+      <div className="flex items-center aspect-square p-1 justify-center border rounded-md">
+        <CiLight size={14} />
+      </div>
+    ),
+    endContent: <Kbd>ctrl I</Kbd>,
   },
   {
     id: 3,
-    name: "Item 3",
+    name: "Open settings",
+    startContent: (
+      <div className="flex items-center aspect-square p-1 justify-center border rounded-md">
+        <IoSettingsOutline size={14} />
+      </div>
+    ),
+    endContent: (
+      <div className="flex items-center gap-1">
+        <Kbd>O</Kbd>
+        <Kbd>S</Kbd>
+      </div>
+    ),
+  },
+  {
+    id: 4,
+    name: "Invite friends",
+    startContent: (
+      <div className="flex items-center aspect-square p-1 justify-center border rounded-md">
+        <GoPersonAdd size={14} />
+      </div>
+    ),
+    endContent: <Kbd>U</Kbd>,
+  },
+  {
+    id: 5,
+    name: "Write a blog",
+    startContent: (
+      <div className="flex items-center aspect-square p-1 justify-center border rounded-md">
+        <GoPencil size={14} />
+      </div>
+    ),
+    endContent: <Kbd>B</Kbd>,
+  },
+  {
+    id: 6,
+    name: "Make a draft",
+    startContent: (
+      <div className="flex items-center aspect-square p-1 justify-center border rounded-md">
+        <MdOutlineDrafts size={14} />
+      </div>
+    ),
+    endContent: <Kbd>D</Kbd>,
   },
 ];
 
 const CmdK = () => {
   const { theme } = useTheme();
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
 
   const [focusIndex, setFocusIndex] = useState(0);
@@ -79,6 +140,7 @@ const CmdK = () => {
             <FirstModal
               focusIndex={focusIndex}
               isSecondModalOpen={isSecondModalOpen}
+              setIsOpen={setIsOpen}
               setIsSecondModalOpen={setIsSecondModalOpen}
             />
             {isSecondModalOpen && <SecondaryModal />}

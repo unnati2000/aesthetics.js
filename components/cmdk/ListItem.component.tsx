@@ -28,7 +28,14 @@ const ListItem = ({
           layoutId="focused"
         />
       )}
-      <p className="text-sm text-stone-500">{title}</p>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          {startContent}
+          <p className="text-sm text-stone-500">{title}</p>
+        </div>
+
+        {endContent}
+      </div>
     </div>
   );
 };

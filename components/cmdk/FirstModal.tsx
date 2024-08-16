@@ -6,18 +6,27 @@ import { items } from "@/app/cmdk/page";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
+import { useClickOutside } from "@mantine/hooks";
+
+import Kbd from "./Kbd";
+
 interface FirstModalProps {
   focusIndex: number;
   isSecondModalOpen: boolean;
   setIsSecondModalOpen: (isOpen: boolean) => void;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
 const FirstModal = ({
   focusIndex,
   setIsSecondModalOpen,
   isSecondModalOpen,
+  setIsOpen,
 }: FirstModalProps) => {
   const [animateDiv, setAnimateDiv] = useState(false);
+  const ref = useClickOutside(() => {
+    setIsOpen(false);
+  });
 
   useEffect(() => {
     if (isSecondModalOpen) {
@@ -28,6 +37,7 @@ const FirstModal = ({
       }, 100);
     }
   }, [isSecondModalOpen]);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -42,33 +52,39 @@ const FirstModal = ({
         cursor: "pointer",
       }}
       exit={{ opacity: 0 }}
-      className="flex flex-col  min-w-96 h-[300px] rounded-xl bg-white"
+      ref={ref}
+      className="flex flex-col justify-between min-w-[452px]  rounded-xl bg-white"
     >
-      <div className="flex flex-col gap-1">
-        <SearchInput />
+      <div>
+        <div className="flex flex-col gap-1">
+          <SearchInput />
+        </div>
+
+        <div className="flex flex-col gap-1 p-1 max-h-60 overflow-y-auto">
+          {items.map((item) => (
+            <div
+              key={item.id}
+              className="flex flex-col gap-1"
+              onClick={() => setIsSecondModalOpen(true)}
+            >
+              <ListItem
+                startContent={item.startContent}
+                endContent={item.endContent}
+                title={item.name}
+                description={item.name}
+                onClick={() => {}}
+                isFocused={focusIndex === item.id}
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div className="flex flex-col gap-1 p-1">
-        {items.map((item) => (
-          <div
-            key={item.id}
-            className="flex flex-col gap-1"
-            onClick={() => setIsSecondModalOpen(true)}
-          >
-            <ListItem
-              startContent={<div>start</div>}
-              endContent={<div>end</div>}
-              title={item.name}
-              description={item.name}
-              onClick={() => {}}
-              isFocused={focusIndex === item.id}
-            />
-          </div>
-        ))}
-      </div>
-
-      <footer className="flex flex-col px-3 py-2 gap-1 border rounded-bl-xl rounded-br-xl">
-        <p className="text-sm text-stone-500">esc</p>
+      <footer className="flex justify-between px-3 py-2 gap-1 border rounded-bl-xl rounded-br-xl">
+        <Kbd>esc</Kbd>
+        <div>
+          <Kbd>⌘ K</Kbd>
+        </div>
       </footer>
     </motion.div>
   );
