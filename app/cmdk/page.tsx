@@ -6,6 +6,7 @@ import { useTheme } from "next-themes";
 
 import { motion, AnimatePresence } from "framer-motion";
 import SearchInput from "@/components/cmdk/SearchInput.component";
+import ListItem from "@/components/cmdk/ListItem.component";
 
 const items = [
   {
@@ -25,7 +26,9 @@ const items = [
 const CmdK = () => {
   const { theme } = useTheme();
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
+
+  const [focusIndex, setFocusIndex] = useState(0);
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "k" && e.metaKey) {
@@ -34,6 +37,22 @@ const CmdK = () => {
 
     if (e.key === "Escape") {
       setIsOpen(false);
+    }
+
+    if (e.key === "ArrowUp") {
+      if (focusIndex > 0) {
+        setFocusIndex(focusIndex - 1);
+      } else {
+        setFocusIndex(items.length);
+      }
+    }
+
+    if (e.key === "ArrowDown") {
+      if (focusIndex < items.length) {
+        setFocusIndex(focusIndex + 1);
+      } else {
+        setFocusIndex(0);
+      }
     }
   });
 
@@ -59,16 +78,25 @@ const CmdK = () => {
                 <SearchInput />
               </div>
 
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-1 p-1">
                 {items.map((item) => (
                   <div key={item.id} className="flex flex-col gap-1">
-                    <p className="text-sm text-gray-500">{item.name}</p>
+                    <ListItem
+                      startContent={<div>start</div>}
+                      endContent={<div>end</div>}
+                      title={item.name}
+                      description={item.name}
+                      onClick={() => {}}
+                      isFocused={focusIndex === item.id}
+                    />
                   </div>
                 ))}
               </div>
 
               <footer className="flex flex-col gap-1">
-                <p className="text-sm text-gray-500">With stacked modals for</p>
+                <p className="text-sm text-stone-500">
+                  With stacked modals for
+                </p>
               </footer>
             </div>
           </motion.div>
