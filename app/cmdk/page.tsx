@@ -5,10 +5,11 @@ import { useState } from "react";
 import { useTheme } from "next-themes";
 
 import { motion, AnimatePresence } from "framer-motion";
-import SearchInput from "@/components/cmdk/SearchInput.component";
-import ListItem from "@/components/cmdk/ListItem.component";
 
-const items = [
+import FirstModal from "@/components/cmdk/FirstModal";
+import SecondaryModal from "@/components/cmdk/SecondaryModal";
+
+export const items = [
   {
     id: 1,
     name: "Item 1",
@@ -26,7 +27,8 @@ const items = [
 const CmdK = () => {
   const { theme } = useTheme();
 
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
 
   const [focusIndex, setFocusIndex] = useState(0);
 
@@ -37,6 +39,7 @@ const CmdK = () => {
 
     if (e.key === "Escape") {
       setIsOpen(false);
+      setIsSecondModalOpen(false);
     }
 
     if (e.key === "ArrowUp") {
@@ -73,32 +76,12 @@ const CmdK = () => {
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/50 flex justify-center items-center"
           >
-            <div className="flex flex-col min-w-96 rounded-xl bg-white">
-              <div className="flex flex-col gap-1">
-                <SearchInput />
-              </div>
-
-              <div className="flex flex-col gap-1 p-1">
-                {items.map((item) => (
-                  <div key={item.id} className="flex flex-col gap-1">
-                    <ListItem
-                      startContent={<div>start</div>}
-                      endContent={<div>end</div>}
-                      title={item.name}
-                      description={item.name}
-                      onClick={() => {}}
-                      isFocused={focusIndex === item.id}
-                    />
-                  </div>
-                ))}
-              </div>
-
-              <footer className="flex flex-col gap-1">
-                <p className="text-sm text-stone-500">
-                  With stacked modals for
-                </p>
-              </footer>
-            </div>
+            <FirstModal
+              focusIndex={focusIndex}
+              isSecondModalOpen={isSecondModalOpen}
+              setIsSecondModalOpen={setIsSecondModalOpen}
+            />
+            {isSecondModalOpen && <SecondaryModal />}
           </motion.div>
         )}
       </AnimatePresence>
