@@ -15,6 +15,8 @@ interface FirstModalProps {
   isSecondModalOpen: boolean;
   setIsSecondModalOpen: (isOpen: boolean) => void;
   setIsOpen: (isOpen: boolean) => void;
+  setSearchInput: (searchInput: string) => void;
+  searchInput: string;
 }
 
 const FirstModal = ({
@@ -22,6 +24,8 @@ const FirstModal = ({
   setIsSecondModalOpen,
   isSecondModalOpen,
   setIsOpen,
+  setSearchInput,
+  searchInput,
 }: FirstModalProps) => {
   const [animateDiv, setAnimateDiv] = useState(false);
   const ref = useClickOutside(() => {
@@ -53,34 +57,41 @@ const FirstModal = ({
       }}
       exit={{ opacity: 0 }}
       ref={ref}
-      className="flex flex-col justify-between min-w-[452px]  rounded-xl bg-white"
+      className="flex flex-col backdrop-blur-md justify-between min-w-[452px] rounded-xl bg-white/20"
     >
       <div>
         <div className="flex flex-col gap-1">
-          <SearchInput />
+          <SearchInput
+            searchInput={searchInput}
+            setSearchInput={setSearchInput}
+          />
         </div>
 
-        <div className="flex flex-col gap-1 p-1 max-h-60 overflow-y-auto">
-          {items.map((item) => (
-            <div
-              key={item.id}
-              className="flex flex-col gap-1"
-              onClick={() => setIsSecondModalOpen(true)}
-            >
-              <ListItem
-                startContent={item.startContent}
-                endContent={item.endContent}
-                title={item.name}
-                description={item.name}
-                onClick={() => {}}
-                isFocused={focusIndex === item.id}
-              />
-            </div>
-          ))}
+        <div className="flex flex-col gap-1 p-1 min-h-60 max-h-60 overflow-y-auto">
+          {items
+            .filter((item) =>
+              item.name.toLowerCase().includes(searchInput.toLowerCase())
+            )
+            .map((item) => (
+              <div
+                key={item.id}
+                className="flex flex-col gap-1"
+                onClick={() => setIsSecondModalOpen(true)}
+              >
+                <ListItem
+                  startContent={item.startContent}
+                  endContent={item.endContent}
+                  title={item.name}
+                  description={item.name}
+                  onClick={() => {}}
+                  isFocused={focusIndex === item.id}
+                />
+              </div>
+            ))}
         </div>
       </div>
 
-      <footer className="flex justify-between px-3 py-2 gap-1 border rounded-bl-xl rounded-br-xl">
+      <footer className="flex items-center justify-between px-3 py-2 gap-1 border-t rounded-bl-xl rounded-br-xl">
         <Kbd>esc</Kbd>
         <div>
           <Kbd>⌘ K</Kbd>

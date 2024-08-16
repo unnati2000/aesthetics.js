@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { TbDeviceTabletSearch } from "react-icons/tb";
 import { CiLight } from "react-icons/ci";
@@ -90,7 +90,7 @@ const CmdK = () => {
 
   const [isOpen, setIsOpen] = useState(true);
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
-
+  const [searchInput, setSearchInput] = useState("");
   const [focusIndex, setFocusIndex] = useState(0);
 
   document.addEventListener("keydown", (e) => {
@@ -141,9 +141,13 @@ const CmdK = () => {
               focusIndex={focusIndex}
               isSecondModalOpen={isSecondModalOpen}
               setIsOpen={setIsOpen}
+              searchInput={searchInput}
+              setSearchInput={setSearchInput}
               setIsSecondModalOpen={setIsSecondModalOpen}
             />
-            {isSecondModalOpen && <SecondaryModal />}
+            {isSecondModalOpen && (
+              <SecondaryModal setIsOpen={setIsSecondModalOpen} />
+            )}
           </motion.div>
         )}
       </AnimatePresence>

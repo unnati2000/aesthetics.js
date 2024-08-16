@@ -24,14 +24,14 @@ const ListItem = ({
     >
       {isFocused && (
         <motion.div
-          className="absolute rounded-md -z-[1] left-0 top-0 bg-stone-300 w-full h-full"
+          className="absolute rounded-md -z-[1] left-0 top-0 bg-stone-500 w-full h-full"
           layoutId="focused"
         />
       )}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           {startContent}
-          <p className="text-sm text-stone-500">{title}</p>
+          <p className="text-sm text-stone-600">{title}</p>
         </div>
 
         {endContent}
