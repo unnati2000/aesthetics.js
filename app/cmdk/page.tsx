@@ -25,8 +25,8 @@ export const items = [
     name: "Search blogs",
     description: "Search for your favorite blogs",
     startContent: (
-      <div className="flex border-zinc-600 items-center aspect-square p-1 justify-center border rounded-md">
-        <TbDeviceTabletSearch size={14} className="text-zinc-500" />
+      <div className="flex border-zinc-700 bg-gradient-to-tr  from-zinc-800 to-zinc-950  items-center aspect-square p-2 justify-center border rounded-lg">
+        <TbDeviceTabletSearch size={20} className="text-zinc-300" />
       </div>
     ),
     endContent: <Kbd>S</Kbd>,
@@ -36,8 +36,8 @@ export const items = [
     name: "Toggle theme",
     description: "Toggle between light and dark mode",
     startContent: (
-      <div className="flex border-zinc-600 items-center aspect-square p-1 justify-center border rounded-md">
-        <CiLight size={14} className="text-zinc-500" />
+      <div className="flex border-zinc-700 bg-gradient-to-tr  from-zinc-800 to-zinc-950  items-center aspect-square p-2 justify-center border rounded-lg">
+        <CiLight size={20} className="text-zinc-300" />
       </div>
     ),
     endContent: <Kbd>ctrl I</Kbd>,
@@ -47,8 +47,8 @@ export const items = [
     name: "Open settings",
     description: "Open settings to change your preferences",
     startContent: (
-      <div className="flex items-center border-zinc-600 aspect-square p-1 justify-center border rounded-md">
-        <IoSettingsOutline size={14} className="text-zinc-500" />
+      <div className="flex border-zinc-700 bg-gradient-to-tr  from-zinc-800 to-zinc-950  items-center aspect-square p-2 justify-center border rounded-lg">
+        <IoSettingsOutline size={20} className="text-zinc-300" />
       </div>
     ),
     endContent: (
@@ -63,8 +63,8 @@ export const items = [
     name: "Invite friends",
     description: "Invite your friends to join you",
     startContent: (
-      <div className="flex items-center border-zinc-600 aspect-square p-1 justify-center border rounded-md">
-        <GoPersonAdd size={14} className="text-zinc-500" />
+      <div className="flex border-zinc-700 bg-gradient-to-tr  from-zinc-800 to-zinc-950  items-center aspect-square p-2 justify-center border rounded-lg">
+        <GoPersonAdd size={20} className="text-zinc-300" />
       </div>
     ),
     endContent: <Kbd>U</Kbd>,
@@ -74,8 +74,8 @@ export const items = [
     name: "Write a blog",
     description: "Write a blog post",
     startContent: (
-      <div className="flex items-center border-zinc-600 aspect-square p-1 justify-center border rounded-md">
-        <GoPencil size={14} className="text-zinc-500" />
+      <div className="flex border-zinc-700 bg-gradient-to-tr  from-zinc-800 to-zinc-950  items-center aspect-square p-2 justify-center border rounded-lg">
+        <GoPencil size={20} className="text-zinc-300" />
       </div>
     ),
     endContent: <Kbd>B</Kbd>,
@@ -85,8 +85,8 @@ export const items = [
     name: "Make a draft",
     description: "Make a draft of your blog post",
     startContent: (
-      <div className="flex border-zinc-600 items-center aspect-square p-1 justify-center border rounded-md">
-        <MdOutlineDrafts size={14} className="text-zinc-500" />
+      <div className="flex border-zinc-700 bg-gradient-to-tr  from-zinc-800 to-zinc-950  items-center aspect-square p-2 justify-center border rounded-lg">
+        <MdOutlineDrafts size={20} className="text-zinc-300" />
       </div>
     ),
     endContent: <Kbd>D</Kbd>,

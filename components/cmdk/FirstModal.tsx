@@ -59,7 +59,7 @@ const FirstModal = ({
       }}
       exit={{ opacity: 0 }}
       ref={ref}
-      className="flex border border-zinc-800 flex-col backdrop-blur-md justify-between min-w-[452px] rounded-xl bg-zinc-900/80"
+      className="flex border border-zinc-800 flex-col backdrop-blur-md justify-between min-w-[452px] rounded-xl"
     >
       <div>
         <div className="flex flex-col gap-1">
@@ -69,7 +69,7 @@ const FirstModal = ({
           />
         </div>
 
-        <div className="flex flex-col gap-1 p-1 min-h-60 max-h-60 overflow-y-auto">
+        <div className="flex bg-gradient-to-b from-zinc-950/50 to-zinc-900 flex-col gap-1 p-1 min-h-60 max-h-60 overflow-y-auto">
           {items
             .filter((item) =>
               item.name.toLowerCase().includes(searchInput.toLowerCase())
@@ -104,4 +104,3 @@ const FirstModal = ({
 };
 
 export default FirstModal;
-
