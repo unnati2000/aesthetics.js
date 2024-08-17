@@ -131,7 +131,16 @@ const CmdK = () => {
   useHotkeys(
     [
       ["mod+k", () => setIsOpen(true)],
-      ["esc", () => setIsOpen(false)],
+      [
+        "esc",
+        () => {
+          if (isSecondModalOpen) {
+            setIsSecondModalOpen(false);
+          } else {
+            setIsOpen(false);
+          }
+        },
+      ],
       [
         "ArrowUp",
         () => {
