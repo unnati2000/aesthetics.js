@@ -17,12 +17,12 @@ const SearchInput = ({ setSearchInput, searchInput }: SearchInput) => {
         onChange={(e) => setSearchInput(e.target.value)}
         placeholder="Search..."
         autoFocus
-        className="w-full border-b bg-white/20 backdrop-blur-md border-stone-400/35 outline-none text-stone-500 rounded-tl-xl py-3 pl-8 text-sm rounded-tr-xl"
+        className="w-full border-b placeholder-zinc-400 bg-transparent backdrop-blur-md border-zinc-800 outline-none text-white rounded-tl-xl py-3 pl-8 text-sm rounded-tr-xl"
       />
-      <div className="absolute left-2 top-0 bottom-0 flex items-center justify-center">
-        <CiSearch size={20} />
+      <div className="absolute text-zinc-500 left-2 top-0 bottom-0 flex items-center justify-center">
+        <CiSearch size={20} className="text-zinc-400" />
       </div>
-      <div className="absolute right-2 top-0 bottom-0 flex items-center justify-center">
+      <div className="absolute text-zinc-400 right-2 top-0 bottom-0 flex items-center justify-center">
         <Kbd>
           <BsArrowReturnLeft size={14} />
         </Kbd>

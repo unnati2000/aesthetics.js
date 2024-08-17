@@ -1,3 +1,5 @@
+"use client";
+
 import SearchInput from "./SearchInput.component";
 import ListItem from "./ListItem.component";
 
@@ -57,7 +59,7 @@ const FirstModal = ({
       }}
       exit={{ opacity: 0 }}
       ref={ref}
-      className="flex flex-col backdrop-blur-md justify-between min-w-[452px] rounded-xl bg-white/20"
+      className="flex border border-zinc-800 flex-col backdrop-blur-md justify-between min-w-[452px] rounded-xl bg-zinc-900/80"
     >
       <div>
         <div className="flex flex-col gap-1">
@@ -91,7 +93,7 @@ const FirstModal = ({
         </div>
       </div>
 
-      <footer className="flex items-center justify-between px-3 py-2 gap-1 border-t rounded-bl-xl rounded-br-xl">
+      <footer className="flex items-center justify-between px-3 py-2 gap-1 border-t border-zinc-800 rounded-bl-xl rounded-br-xl">
         <Kbd>esc</Kbd>
         <div>
           <Kbd>⌘ K</Kbd>
