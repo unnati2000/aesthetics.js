@@ -52,7 +52,7 @@ const SecondaryModal = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1, transition: { duration: 0.3, ease: "easeInOut" } }}
       exit={{ opacity: 0, transition: { duration: 0.3, ease: "easeInOut" } }}
-      className="bg-stone-900/20 border border-stone-800 backdrop-blur-md rounded-xl z-20 absolute max-w-[452px] min-w-[452px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[300px]"
+      className="bg-stone-900/20 border border-zinc-800 backdrop-blur-md rounded-xl z-20 absolute max-w-[452px] min-w-[452px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[300px]"
     >
       <div className="h-full flex flex-col justify-between">
         <div>
@@ -73,22 +73,30 @@ const SecondaryModal = ({
                   e.stopPropagation();
                   setSelectedTheme(theme);
                 }}
-                style={{
-                  boxShadow:
-                    selectedTheme.id === theme.id
-                      ? "inset -7px 7px 14px #0c0c0c, inset 7px -7px 14px #1c1c1c"
-                      : "",
-                }}
-                className="flex  items-center p-4 rounded-lg flex-col gap-4"
+                // style={{
+                //   boxShadow:
+                //     selectedTheme.id === theme.id
+                //       ? "inset -7px 7px 14px #0c0c0c, inset 7px -7px 14px #1c1c1c"
+                //       : "",
+                // }}
+                className="flex relative cursor-pointer items-center p-4 rounded-lg flex-col gap-4"
               >
+                {selectedTheme.id === theme.id ? (
+                  <motion.div
+                    style={{
+                      boxShadow:
+                        "inset -7px 7px 14px #0c0c0c, inset 7px -7px 14px #1c1c1c",
+                    }}
+                    layoutId="selected"
+                    className="absolute h-full p-4 rounded-lg top-0 left-0 w-full"
+                  />
+                ) : null}{" "}
                 {/* <div className="flex justify-center items-center gap-2"> */}
                 <p className="text-zinc-200 text-sm font-semibold">
                   {theme.name} theme
                 </p>
                 {/* </div> */}
-
                 <theme.icon className="text-zinc-200 text-4xl" />
-
                 <p className="text-zinc-600 text-center w-full text-xs">
                   {theme.description}
                 </p>

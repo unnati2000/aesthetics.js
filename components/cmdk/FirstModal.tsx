@@ -39,8 +39,10 @@ const FirstModal = ({
 
   const [animateDiv, setAnimateDiv] = useState(false);
   const ref = useClickOutside(() => {
-    setSearchInput("");
-    setIsOpen(false);
+    if (!isSecondModalOpen) {
+      setSearchInput("");
+      setIsOpen(false);
+    }
   });
 
   useEffect(() => {
@@ -104,7 +106,9 @@ const FirstModal = ({
                   startContent={item.startContent}
                   endContent={item.endContent}
                   targetRef={targetRef}
-                  viewPortRef={viewPortRef}
+                  viewPortRef={
+                    viewPortRef as React.RefObject<HTMLDivElement> as unknown
+                  }
                   title={item.name}
                   description={item.name}
                   onClick={() => {}}

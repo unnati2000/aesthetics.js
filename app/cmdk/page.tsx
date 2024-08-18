@@ -8,6 +8,9 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { GoPersonAdd } from "react-icons/go";
 import { GoPencil } from "react-icons/go";
 import { MdOutlineDrafts } from "react-icons/md";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
+
+import { BsArrowReturnLeft } from "react-icons/bs";
 
 import { useTheme } from "next-themes";
 
@@ -96,7 +99,7 @@ export const items = [
 const CmdK = () => {
   const { theme } = useTheme();
 
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [focusIndex, setFocusIndex] = useState(0);
@@ -136,7 +139,7 @@ const CmdK = () => {
     [
       ["mod+k", () => setIsOpen(true)],
       [
-        "esc",
+        "escape",
         () => {
           if (isSecondModalOpen) {
             setIsSecondModalOpen(false);
@@ -200,13 +203,38 @@ const CmdK = () => {
   }, [searchInput]);
 
   return (
-    <div className="h-screen flex flex-col bg-zinc-800 justify-center items-center">
-      <div className="flex flex-col">
+    <div className="h-screen flex flex-col bg-zinc-900 justify-center items-center">
+      <div className="flex flex-col gap-3">
         {/* for cmd k text */}
         <div className="flex flex-col gap-1">
-          <p className="text-xl font-bold text-zinc-400">Cmd + K</p>
-          <p className="text-sm text-zinc-400">With stacked modals for</p>
+          <p className="text-4xl font-bold text-zinc-400">cmd k</p>
+          <p className="text-sm text-zinc-600">
+            With stacked modals and keyboard navigation
+          </p>
         </div>
+
+        <div className="text-sm block text-zinc-200 tex">
+          Press{" "}
+          {
+            <Kbd>
+              <FaArrowUp />
+            </Kbd>
+          }{" "}
+          {
+            <Kbd>
+              <FaArrowDown />
+            </Kbd>
+          }{" "}
+          to navigation and{" "}
+          {
+            <Kbd>
+              <BsArrowReturnLeft />
+            </Kbd>
+          }{" "}
+          to open stacked modal
+        </div>
+
+        <div className="gap-x-4"></div>
       </div>
       <AnimatePresence>
         {isOpen && (

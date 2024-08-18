@@ -20,5 +20,34 @@
   .text-balance {
     text-wrap: balance;
   }
-}
 
+  /* tailwind.css or a global CSS file */
+  @layer utilities {
+    .border-gradient {
+      position: relative;
+      z-index: 1;
+    }
+    .border-gradient::before {
+      content: "";
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(90deg, #ff7e5f, #feb47b);
+      z-index: -1;
+      border-radius: inherit;
+    }
+    .border-gradient::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      /* background: #1a1e21; */
+      z-index: -1;
+      border-radius: inherit;
+    }
+  }
+}
