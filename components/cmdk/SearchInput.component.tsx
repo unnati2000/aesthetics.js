@@ -22,11 +22,13 @@ const SearchInput = ({ setSearchInput, searchInput }: SearchInput) => {
       <div className="absolute text-zinc-500 left-2 top-0 bottom-0 flex items-center justify-center">
         <CiSearch size={20} className="text-zinc-400" />
       </div>
-      <div className="absolute text-zinc-400 right-2 top-0 bottom-0 flex items-center justify-center">
-        <Kbd>
-          <BsArrowReturnLeft size={14} />
-        </Kbd>
-      </div>
+      {searchInput.length > 0 && (
+        <div className="absolute text-zinc-400 right-2 top-0 bottom-0 flex items-center justify-center">
+          <Kbd>
+            <BsArrowReturnLeft size={14} />
+          </Kbd>
+        </div>
+      )}
     </div>
   );
 };

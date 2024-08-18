@@ -6,7 +6,7 @@ import ListItem from "./ListItem.component";
 import { items } from "@/app/cmdk/page";
 
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 import {
   useClickOutside,
@@ -63,6 +63,14 @@ const FirstModal = ({
     }
   }, [entry?.isIntersecting]);
 
+  const filteredItems = useMemo(
+    () =>
+      items.filter((item) =>
+        item.name.toLowerCase().includes(searchInput.toLowerCase())
+      ),
+    [searchInput]
+  );
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -92,11 +100,8 @@ const FirstModal = ({
           ref={scrollableRef}
           className="flex bg-gradient-to-b from-zinc-950/50 to-zinc-900 flex-col gap-1 p-1 min-h-60 max-h-60 overflow-y-auto"
         >
-          {items
-            .filter((item) =>
-              item.name.toLowerCase().includes(searchInput.toLowerCase())
-            )
-            .map((item) => (
+          {filteredItems.length > 0 ? (
+            filteredItems.map((item) => (
               <div
                 key={item.id}
                 className="flex flex-col gap-1"
@@ -115,13 +120,19 @@ const FirstModal = ({
                   isFocused={focusIndex === item.id}
                 />
               </div>
-            ))}
+            ))
+          ) : (
+            <div className="text-sm text-center text-zinc-500">
+              No results found
+            </div>
+          )}
         </div>
       </div>
 
       <footer className="flex items-center justify-between px-3 py-2 gap-1 border-t border-zinc-800 rounded-bl-xl rounded-br-xl">
         <Kbd>esc</Kbd>
-        <div>
+        <div className="flex items-center gap-2 rounded-md text-zinc-300 bg-zinc-800 p-1 text-xs">
+          <p>Actions</p>
           <Kbd>⌘ K</Kbd>
         </div>
       </footer>

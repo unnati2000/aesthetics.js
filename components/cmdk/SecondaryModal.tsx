@@ -106,7 +106,7 @@ const SecondaryModal = ({
         </div>
 
         <footer className="flex bg-zinc-900 border-t border-zinc-800 rounded-b-xl p-2 items-center justify-between">
-          <Kbd>Esc</Kbd>
+          <Kbd>esc</Kbd>
         </footer>
       </div>
     </motion.div>
