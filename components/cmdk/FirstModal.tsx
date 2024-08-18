@@ -8,7 +8,11 @@ import { items } from "@/app/cmdk/page";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-import { useClickOutside } from "@mantine/hooks";
+import {
+  useClickOutside,
+  useScrollIntoView,
+  useIntersection,
+} from "@mantine/hooks";
 
 import Kbd from "./Kbd";
 
@@ -29,8 +33,13 @@ const FirstModal = ({
   setSearchInput,
   searchInput,
 }: FirstModalProps) => {
+  const { ref: viewPortRef, entry } = useIntersection();
+
+  const { scrollIntoView, scrollableRef, targetRef } = useScrollIntoView();
+
   const [animateDiv, setAnimateDiv] = useState(false);
   const ref = useClickOutside(() => {
+    setSearchInput("");
     setIsOpen(false);
   });
 
@@ -43,6 +52,14 @@ const FirstModal = ({
       }, 100);
     }
   }, [isSecondModalOpen]);
+
+  useEffect(() => {
+    if (entry?.isIntersecting) {
+      scrollIntoView({
+        alignment: "center",
+      });
+    }
+  }, [entry?.isIntersecting]);
 
   return (
     <motion.div
@@ -69,7 +86,10 @@ const FirstModal = ({
           />
         </div>
 
-        <div className="flex bg-gradient-to-b from-zinc-950/50 to-zinc-900 flex-col gap-1 p-1 min-h-60 max-h-60 overflow-y-auto">
+        <div
+          ref={scrollableRef}
+          className="flex bg-gradient-to-b from-zinc-950/50 to-zinc-900 flex-col gap-1 p-1 min-h-60 max-h-60 overflow-y-auto"
+        >
           {items
             .filter((item) =>
               item.name.toLowerCase().includes(searchInput.toLowerCase())
@@ -83,6 +103,8 @@ const FirstModal = ({
                 <ListItem
                   startContent={item.startContent}
                   endContent={item.endContent}
+                  targetRef={targetRef}
+                  viewPortRef={viewPortRef}
                   title={item.name}
                   description={item.name}
                   onClick={() => {}}

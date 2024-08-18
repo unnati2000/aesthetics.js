@@ -101,6 +101,10 @@ const CmdK = () => {
   const [searchInput, setSearchInput] = useState("");
   const [focusIndex, setFocusIndex] = useState(0);
 
+  const length = items.filter((item) =>
+    item.name.toLowerCase().includes(searchInput.toLowerCase())
+  ).length;
+
   // document.addEventListener("keydown", (e) => {
   //   if (e.key === "k" && e.metaKey) {
   //     setIsOpen(true);
@@ -144,27 +148,56 @@ const CmdK = () => {
       [
         "ArrowUp",
         () => {
-          if (focusIndex > 0) {
-            setFocusIndex(focusIndex - 1);
+          if (searchInput.length > 0) {
+            //
+
+            if (focusIndex > 0) {
+              setFocusIndex(focusIndex - 1);
+            } else {
+              setFocusIndex(length);
+            }
           } else {
-            setFocusIndex(items.length);
+            if (focusIndex > 0) {
+              setFocusIndex(focusIndex - 1);
+            } else {
+              setFocusIndex(items.length);
+            }
           }
         },
       ],
       [
         "ArrowDown",
         () => {
-          if (focusIndex < items.length) {
-            setFocusIndex(focusIndex + 1);
+          if (searchInput.length > 0) {
+            //
+            if (focusIndex < length) {
+              setFocusIndex(focusIndex + 1);
+            } else {
+              setFocusIndex(0);
+            }
           } else {
-            setFocusIndex(0);
+            if (focusIndex < items.length) {
+              setFocusIndex(focusIndex + 1);
+            } else {
+              setFocusIndex(0);
+            }
           }
+        },
+      ],
+      [
+        "Enter",
+        () => {
+          setIsSecondModalOpen(true);
         },
       ],
     ],
     [],
     false
   );
+
+  useEffect(() => {
+    setFocusIndex(0);
+  }, [searchInput]);
 
   return (
     <div className="h-screen flex flex-col bg-zinc-800 justify-center items-center">

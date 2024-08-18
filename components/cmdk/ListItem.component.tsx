@@ -5,6 +5,8 @@ interface ListItemProps {
   description: string;
   onClick: () => void;
   isFocused: boolean;
+  targetRef: React.RefObject<HTMLDivElement>;
+  viewPortRef: React.RefObject<HTMLDivElement>;
 }
 
 import { motion } from "framer-motion";
@@ -16,11 +18,14 @@ const ListItem = ({
   description,
   onClick,
   isFocused,
+  targetRef,
+  viewPortRef,
 }: ListItemProps) => {
   return (
     <div
       className={`p-2 relative z-10 border hover:border-zinc-800 border-transparent hover:bg-gradient-to-b from-zinc-800 to-zinc-800/50 rounded-md transition-all duration-200 ease-in-out cursor-pointer`}
       onClick={onClick}
+      ref={isFocused ? targetRef : null}
     >
       {isFocused && (
         <motion.div
@@ -28,7 +33,10 @@ const ListItem = ({
           layoutId="focused"
         />
       )}
-      <div className="flex items-center justify-between">
+      <div
+        ref={isFocused ? viewPortRef : null}
+        className="flex items-center justify-between"
+      >
         <div className="flex items-center gap-4">
           {startContent}
           <div className="flex flex-col">
