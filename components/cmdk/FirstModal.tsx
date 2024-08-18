@@ -106,8 +106,11 @@ const FirstModal = ({
                 <ListItem
                   startContent={item.startContent}
                   endContent={item.endContent}
+                  // @ts-ignore
                   targetRef={targetRef}
+                  // @ts-ignore
                   viewPortRef={
+                    // @ts-ignore
                     viewPortRef as React.RefObject<HTMLDivElement> as unknown
                   }
                   title={item.name}
