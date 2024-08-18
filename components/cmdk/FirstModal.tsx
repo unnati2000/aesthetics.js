@@ -3,10 +3,12 @@
 import SearchInput from "./SearchInput.component";
 import ListItem from "./ListItem.component";
 
-import { items } from "@/app/cmdk/page";
+// import { items } from "@/app/cmdk/page";
+
+import { Item } from "@/types/search";
 
 import { motion } from "framer-motion";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 
 import {
   useClickOutside,
@@ -23,6 +25,7 @@ interface FirstModalProps {
   setIsOpen: (isOpen: boolean) => void;
   setSearchInput: (searchInput: string) => void;
   searchInput: string;
+  filteredItems: Item[];
 }
 
 const FirstModal = ({
@@ -32,6 +35,7 @@ const FirstModal = ({
   setIsOpen,
   setSearchInput,
   searchInput,
+  filteredItems,
 }: FirstModalProps) => {
   const { ref: viewPortRef, entry } = useIntersection();
 
@@ -63,14 +67,6 @@ const FirstModal = ({
     }
   }, [entry?.isIntersecting]);
 
-  const filteredItems = useMemo(
-    () =>
-      items.filter((item) =>
-        item.name.toLowerCase().includes(searchInput.toLowerCase())
-      ),
-    [searchInput]
-  );
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -101,7 +97,7 @@ const FirstModal = ({
           className="flex bg-gradient-to-b from-zinc-950/50 to-zinc-900 flex-col gap-1 p-1 min-h-60 max-h-60 overflow-y-auto"
         >
           {filteredItems.length > 0 ? (
-            filteredItems.map((item) => (
+            filteredItems.map((item, index) => (
               <div
                 key={item.id}
                 className="flex flex-col gap-1"
@@ -117,7 +113,7 @@ const FirstModal = ({
                   title={item.name}
                   description={item.name}
                   onClick={() => {}}
-                  isFocused={focusIndex === item.id}
+                  isFocused={focusIndex === index}
                 />
               </div>
             ))

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import { TbDeviceTabletSearch } from "react-icons/tb";
 import { CiLight } from "react-icons/ci";
@@ -12,6 +12,8 @@ import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 
 import { BsArrowReturnLeft } from "react-icons/bs";
 
+import { Item } from "@/types/search";
+
 import { useTheme } from "next-themes";
 
 import { useHotkeys } from "@mantine/hooks";
@@ -22,7 +24,7 @@ import FirstModal from "@/components/cmdk/FirstModal";
 import SecondaryModal from "@/components/cmdk/SecondaryModal";
 import Kbd from "@/components/cmdk/Kbd";
 
-export const items = [
+export const items: Item[] = [
   {
     id: 1,
     name: "Search blogs",
@@ -104,10 +106,6 @@ const CmdK = () => {
   const [searchInput, setSearchInput] = useState("");
   const [focusIndex, setFocusIndex] = useState(0);
 
-  const length = items.filter((item) =>
-    item.name.toLowerCase().includes(searchInput.toLowerCase())
-  ).length;
-
   // document.addEventListener("keydown", (e) => {
   //   if (e.key === "k" && e.metaKey) {
   //     setIsOpen(true);
@@ -151,39 +149,20 @@ const CmdK = () => {
       [
         "ArrowUp",
         () => {
-          if (searchInput.length > 0) {
-            //
-
-            if (focusIndex > 0) {
-              setFocusIndex(focusIndex - 1);
-            } else {
-              setFocusIndex(length);
-            }
+          if (focusIndex > 0) {
+            setFocusIndex(focusIndex - 1);
           } else {
-            if (focusIndex > 0) {
-              setFocusIndex(focusIndex - 1);
-            } else {
-              setFocusIndex(items.length);
-            }
+            setFocusIndex(filteredItems.length);
           }
         },
       ],
       [
         "ArrowDown",
         () => {
-          if (searchInput.length > 0) {
-            //
-            if (focusIndex < length) {
-              setFocusIndex(focusIndex + 1);
-            } else {
-              setFocusIndex(0);
-            }
+          if (focusIndex < filteredItems.length - 1) {
+            setFocusIndex(focusIndex + 1);
           } else {
-            if (focusIndex < items.length) {
-              setFocusIndex(focusIndex + 1);
-            } else {
-              setFocusIndex(0);
-            }
+            setFocusIndex(0);
           }
         },
       ],
@@ -201,6 +180,14 @@ const CmdK = () => {
   useEffect(() => {
     setFocusIndex(0);
   }, [searchInput]);
+
+  const filteredItems = useMemo(
+    () =>
+      items.filter((item) =>
+        item.name.toLowerCase().includes(searchInput.toLowerCase())
+      ),
+    [searchInput]
+  );
 
   return (
     <div className="h-screen flex flex-col bg-zinc-900 justify-center items-center">
@@ -246,6 +233,7 @@ const CmdK = () => {
           >
             <FirstModal
               focusIndex={focusIndex}
+              filteredItems={filteredItems}
               isSecondModalOpen={isSecondModalOpen}
               setIsOpen={setIsOpen}
               searchInput={searchInput}
