@@ -67,15 +67,23 @@ const steps = [
   },
   {
     step: "6 months",
-    showDays: false,
+    showDays: true,
+    days: [1, 11, 21],
+  },
+  {
+    step: "3 months",
+    showDays: true,
+    days: [1, 11, 21],
   },
   {
     step: "month",
     showDays: true,
+    days: [1, 11, 21],
   },
   {
     step: "day",
     showDays: true,
+    days: Array.from({ length: 31 }, (_, i) => i + 1),
   },
 ];
 
@@ -111,7 +119,7 @@ const Timeline = () => {
 
   const handlePinch = (delta: number) => {
     const newMonthWidth = Math.min(
-      Math.max(monthWidth * (1 + delta / 100), MIN_MONTH_WIDTH),
+      Math.max(monthWidth * delta, MIN_MONTH_WIDTH),
       MAX_MONTH_WIDTH
     );
     const newDayWidth = dayWidth * (newMonthWidth / monthWidth);
@@ -210,15 +218,15 @@ const Timeline = () => {
               </div>
               {item.showDays && (
                 <div className="flex">
-                  {[...Array(item.days)].map((_, i) => (
+                  {steps[currentStepIndex]?.days?.map((day) => (
                     <div
                       style={{
                         width: `${dayWidth}px`,
                       }}
                       className="border w-32"
-                      key={i}
+                      key={day}
                     >
-                      {i}
+                      {day}
                     </div>
                   ))}
                 </div>
@@ -232,4 +240,3 @@ const Timeline = () => {
 };
 
 export default Timeline;
-
