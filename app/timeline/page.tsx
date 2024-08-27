@@ -87,35 +87,62 @@ const steps = [
   },
 ];
 
+const startDate = new Date("2024-01-01");
+const endDate = new Date("2025-05-31");
+
 const Timeline = () => {
+  // ... existing state and other functions ...
+
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const timelineRef = useRef<HTMLDivElement>(null);
 
   const [monthWidth, setMonthWidth] = useState(50);
   const [dayWidth, setDayWidth] = useState(30);
 
-  //   const handlePinch = (delta: number) => {
-  //     const newScale = scale * (1 + delta / 100);
-  //     setScale(newScale);
+  const [dataToShow, setDataToShow] = useState<
+    {
+      month: string;
+      days: number;
+      showDays: boolean;
+      year: number;
+    }[]
+  >([]);
 
-  //     const newMonthWidth = monthWidth * newScale;
-  //     const newDayWidth = dayWidth * newScale;
+  useEffect(() => {
+    const generateTimelineData = () => {
+      let currentDate = new Date(startDate);
+      const data = [];
 
-  //     setMonthWidth(newMonthWidth);
-  //     setDayWidth(newDayWidth);
+      while (currentDate <= endDate) {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-  //     if (newMonthWidth > 200 && currentStepIndex < steps.length - 1) {
-  //       setCurrentStepIndex(currentStepIndex + 1);
-  //       setScale(1);
-  //       setMonthWidth(50);
-  //       setDayWidth(30);
-  //     } else if (newMonthWidth < 25 && currentStepIndex > 0) {
-  //       setCurrentStepIndex(currentStepIndex - 1);
-  //       setScale(1);
-  //       setMonthWidth(50);
-  //       setDayWidth(30);
-  //     }
-  //   };
+        data.push({
+          month: monthsAndDays[month].month,
+          days: daysInMonth,
+          showDays: steps[currentStepIndex].showDays,
+          year: year,
+        });
+
+        currentDate.setMonth(currentDate.getMonth() + 1);
+      }
+
+      return data;
+    };
+
+    const allData = generateTimelineData();
+
+    if (steps[currentStepIndex].step === "year") {
+      setDataToShow(allData.filter((_, i) => i % 3 === 0));
+    } else if (steps[currentStepIndex].step === "6 months") {
+      setDataToShow(allData.filter((_, i) => i % 2 === 0));
+    } else {
+      setDataToShow(allData);
+    }
+  }, [currentStepIndex]);
+
+  // ... existing render logic ...
 
   const handlePinch = (delta: number) => {
     const newMonthWidth = Math.min(
@@ -141,50 +168,6 @@ const Timeline = () => {
     }
   };
 
-  const [dataToShow, setDataToShow] = useState<
-    {
-      month: string;
-      days: number;
-      showDays: boolean;
-    }[]
-  >([]);
-
-  useEffect(() => {
-    if (steps[currentStepIndex].step === "year") {
-      const data = monthsAndDays
-        .filter((_, i) => i % 3 === 0)
-        .map((month) => ({
-          month: month.month,
-          days: month.days,
-          showDays: steps[currentStepIndex].showDays,
-        }));
-      setDataToShow(data);
-    } else if (steps[currentStepIndex].step === "6 months") {
-      const data = monthsAndDays
-        .filter((_, i) => i % 2 === 0)
-        .map((month) => ({
-          month: month.month,
-          days: month.days,
-          showDays: steps[currentStepIndex].showDays,
-        }));
-      setDataToShow(data);
-    } else if (steps[currentStepIndex].step === "month") {
-      const data = monthsAndDays.map((month) => ({
-        month: month.month,
-        days: month.days,
-        showDays: steps[currentStepIndex].showDays,
-      }));
-      setDataToShow(data);
-    } else if (steps[currentStepIndex].step === "day") {
-      const data = monthsAndDays.map((month) => ({
-        month: month.month,
-        days: month.days,
-        showDays: steps[currentStepIndex].showDays,
-      }));
-      setDataToShow(data);
-    }
-  }, [currentStepIndex]);
-
   const bind = useGesture({
     onPinch: ({ offset: [d], movement: [md], memo }) => {
       handlePinch(d);
@@ -192,29 +175,29 @@ const Timeline = () => {
   });
 
   return (
-    <div className="bg-zinc-900 h-screen flex flex-col items-center justify-center">
+    <div className="bg-zinc-900 px-4 h-screen flex flex-col items-center justify-center">
       <div
         {...bind()}
         ref={timelineRef}
         style={{
           touchAction: "none",
         }}
-        className="border overflow-auto h-36 flex items-start justify-evenly text-zinc-400 w-full"
+        className="border p-4 border-zinc-700 rounded-xl shadow-lg bg-gradient-to-br from-zinc-900 to-zinc-950 overflow-auto h-36 flex items-start justify-evenly text-zinc-400 w-full"
       >
-        {dataToShow.map((item) => {
+        {dataToShow.map((item, index) => {
           return (
             <div
-              key={item.month}
-              className="flex flex-col items-center justify-center"
+              key={`${item.year}-${item.month}`}
+              className="flex flex-col items-center gap-4 justify-center"
             >
               <div
                 style={{
                   width: `${monthWidth}px`,
                 }}
-                className="border w-32"
-                key={item.month}
+                className="justify-center text-zinc-500 transition-all duration-300 ease-in-out flex items-center gap-2 overflow-visible"
               >
-                {item.month}
+                <p className="text-md">{item.month.slice(0, 3)}</p>
+                <p className="text-zinc-500">{item.year}</p>
               </div>
               {item.showDays && (
                 <div className="flex">
@@ -223,9 +206,10 @@ const Timeline = () => {
                       style={{
                         width: `${dayWidth}px`,
                       }}
-                      className="border w-32"
-                      key={day}
+                      className="flex items-center border-t relative pt-4 border-zinc-600 justify-center w-32"
+                      key={`${item.year}-${item.month}-${day}`}
                     >
+                      <div className="absolute left-1/2 border-l border-zinc-600 top-0 h-2 rounded-bl-md rounded-br-md" />
                       {day}
                     </div>
                   ))}
