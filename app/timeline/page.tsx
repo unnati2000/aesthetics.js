@@ -2,6 +2,8 @@
 
 import { useEffect, useState, useRef } from "react";
 
+import { Rnd } from "react-rnd";
+
 import { useGesture } from "@use-gesture/react";
 
 const MIN_MONTH_WIDTH = 25;
@@ -96,6 +98,9 @@ const Timeline = () => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const timelineRef = useRef<HTMLDivElement>(null);
 
+  const [currentDate, setCurrentDate] = useState(startDate);
+  const [x, setX] = useState(0);
+
   const [monthWidth, setMonthWidth] = useState(50);
   const [dayWidth, setDayWidth] = useState(30);
 
@@ -108,6 +113,29 @@ const Timeline = () => {
     }[]
   >([]);
 
+  const calculateCurrentDate = (needleX: number) => {
+    let totalDays = 0;
+    const currentStep = steps[currentStepIndex];
+
+    if (currentStep.step === "year") {
+      totalDays = Math.floor(needleX / monthWidth) * 30; // Approximate
+    } else if (
+      currentStep.step === "6 months" ||
+      currentStep.step === "3 months" ||
+      currentStep.step === "month"
+    ) {
+      totalDays =
+        Math.floor(needleX / monthWidth) * 30 +
+        Math.floor((needleX % monthWidth) / dayWidth) * 10; // Approximate
+    } else {
+      // day step
+      totalDays = Math.floor(needleX / dayWidth);
+    }
+
+    let tempDate = new Date(startDate);
+    tempDate.setDate(tempDate.getDate() + totalDays);
+    setCurrentDate(tempDate);
+  };
   useEffect(() => {
     const generateTimelineData = () => {
       let currentDate = new Date(startDate);
@@ -142,7 +170,17 @@ const Timeline = () => {
     }
   }, [currentStepIndex]);
 
-  // ... existing render logic ...
+  useEffect(() => {
+    const preventDefault = (e: TouchEvent) => {
+      e.preventDefault();
+    };
+
+    document.addEventListener("touchmove", preventDefault, { passive: false });
+
+    return () => {
+      document.removeEventListener("touchmove", preventDefault);
+    };
+  }, []);
 
   const handlePinch = (delta: number) => {
     const newMonthWidth = Math.min(
@@ -168,22 +206,46 @@ const Timeline = () => {
     }
   };
 
-  const bind = useGesture({
-    onPinch: ({ offset: [d], movement: [md], memo }) => {
-      handlePinch(d);
+  const bind = useGesture(
+    {
+      onPinch: ({ offset: [d], movement: [md], memo }) => {
+        handlePinch(d);
+      },
     },
-  });
+    {
+      eventOptions: { passive: false },
+    }
+  );
 
   return (
-    <div className="bg-zinc-900 px-4 h-screen flex flex-col items-center justify-center">
+    <div className="bg-zinc-900  px-4 h-screen flex flex-col items-center justify-center">
       <div
         {...bind()}
         ref={timelineRef}
         style={{
           touchAction: "none",
         }}
-        className="border p-4 border-zinc-700 rounded-xl shadow-lg bg-gradient-to-br from-zinc-900 to-zinc-950 overflow-auto h-36 flex items-start justify-evenly text-zinc-400 w-full"
+        className="border relative p-4 min-h-72 border-zinc-700 rounded-xl shadow-lg bg-gradient-to-br from-zinc-900 to-zinc-950 overflow-auto h-36 flex items-start justify-evenly text-zinc-400 w-full"
       >
+        <Rnd
+          bounds={"parent"}
+          position={{
+            x: x,
+            y: 60,
+          }}
+          size={{
+            height: "90%",
+            width: "10px",
+          }}
+          onDrag={(e, d) => {
+            setX(d.x);
+            calculateCurrentDate(d.x);
+          }}
+          enableResizing={false}
+          dragAxis="x"
+        >
+          <Needle />
+        </Rnd>
         {dataToShow.map((item, index) => {
           return (
             <div
@@ -220,6 +282,12 @@ const Timeline = () => {
         })}
       </div>
     </div>
+  );
+};
+
+const Needle = () => {
+  return (
+    <div className="w-[2px] bg-zinc-600 h-full rounded-bl-md rounded-br-md" />
   );
 };
 
