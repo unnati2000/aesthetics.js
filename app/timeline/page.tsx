@@ -424,18 +424,26 @@ const Timeline = () => {
               </div>
               {item.showDays && (
                 <div className="flex">
-                  {steps[currentStepIndex]?.days?.map((day) => (
-                    <div
-                      style={{
-                        width: `${dayWidth}px`,
-                      }}
-                      className="flex items-center border-t relative pt-4 border-zinc-600 justify-center w-32"
-                      key={`${item.year}-${item.month}-${day}`}
-                    >
-                      <div className="absolute left-1/2 border-l border-zinc-600 top-0 h-2 rounded-bl-md rounded-br-md" />
-                      {day}
-                    </div>
-                  ))}
+                  {monthsAndDays.find((m) => m.month === item.month)?.days &&
+                    Array.from(
+                      {
+                        length: monthsAndDays.find(
+                          (m) => m.month === item.month
+                        )!.days,
+                      },
+                      (_, i) => i + 1
+                    ).map((day) => (
+                      <div
+                        style={{
+                          width: `${dayWidth}px`,
+                        }}
+                        className="flex items-center border-t relative pt-4 border-zinc-600 justify-center w-32"
+                        key={`${item.year}-${item.month}-${day}`}
+                      >
+                        <div className="absolute left-1/2 border-l border-zinc-600 top-0 h-2 rounded-bl-md rounded-br-md" />
+                        {day}
+                      </div>
+                    ))}
                 </div>
               )}
             </div>
