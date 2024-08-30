@@ -91,6 +91,7 @@ const steps = [
 
 const startDate = new Date("2024-01-01");
 const endDate = new Date("2025-05-31");
+const initialCurrentDate = new Date("2024-05-01");
 
 const Timeline = () => {
   // ... existing state and other functions ...
@@ -236,7 +237,7 @@ const Timeline = () => {
 
     const daysPassed = Math.floor(needleX / pixelsPerDay);
     let tempDate = new Date(startDate);
-    tempDate.setDate(tempDate.getDate() + daysPassed);
+    tempDate.setDate(tempDate.getDate() + daysPassed + 1);
 
     // Adjust for time of day
     const dayFraction = (needleX % pixelsPerDay) / pixelsPerDay;
@@ -391,7 +392,7 @@ const Timeline = () => {
         <Rnd
           position={{
             x: x,
-            y: 60,
+            y: 64,
           }}
           size={{
             height: "90%",
@@ -447,7 +448,37 @@ const Timeline = () => {
 
 const Needle = () => {
   return (
-    <div className="w-[2px] bg-zinc-600 h-full rounded-bl-md rounded-br-md" />
+    <div className="h-full flex items-center flex-col">
+      <svg
+        fill="#4e4d4d"
+        height="20px"
+        width="20px"
+        version="1.1"
+        id="Layer_1"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 511.509 511.509"
+        xmlSpace="preserve"
+        transform="rotate(180)"
+      >
+        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+        <g
+          id="SVGRepo_tracerCarrier"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></g>
+        <g id="SVGRepo_iconCarrier">
+          {" "}
+          <g>
+            {" "}
+            <g>
+              {" "}
+              <path d="M498.675,493.845L265.16,5.568c-3.541-7.424-15.701-7.424-19.243,0L11.251,496.235c-1.579,3.307-1.344,7.189,0.597,10.283 s5.355,4.992,9.024,4.992h469.76c5.888,0,10.667-4.779,10.667-10.667C501.299,498.176,500.317,495.723,498.675,493.845z"></path>{" "}
+            </g>{" "}
+          </g>{" "}
+        </g>
+      </svg>
+      <div className="w-[2px] bg-zinc-600 h-full rounded-bl-md rounded-br-md" />
+    </div>
   );
 };
 
