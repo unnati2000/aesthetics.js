@@ -113,29 +113,160 @@ const Timeline = () => {
     }[]
   >([]);
 
-  const calculateCurrentDate = (needleX: number) => {
-    let totalDays = 0;
-    const currentStep = steps[currentStepIndex];
+  // const calculateCurrentDate = (needleX: number) => {
+  //   const currentStep = steps[currentStepIndex];
+  //   let tempDate = new Date(startDate);
+  //   let totalWidth = 0;
+  //   let monthIndex = 0;
 
-    if (currentStep.step === "year") {
-      totalDays = Math.floor(needleX / monthWidth) * 30; // Approximate
-    } else if (
-      currentStep.step === "6 months" ||
-      currentStep.step === "3 months" ||
-      currentStep.step === "month"
-    ) {
-      totalDays =
-        Math.floor(needleX / monthWidth) * 30 +
-        Math.floor((needleX % monthWidth) / dayWidth) * 10; // Approximate
-    } else {
-      // day step
-      totalDays = Math.floor(needleX / dayWidth);
+  //   while (tempDate <= endDate && totalWidth <= needleX) {
+  //     const daysInMonth = new Date(
+  //       tempDate.getFullYear(),
+  //       tempDate.getMonth() + 1,
+  //       0
+  //     ).getDate();
+  //     let widthToAdd = 0;
+
+  //     if (currentStep.step === "year") {
+  //       widthToAdd = monthWidth;
+  //     } else if (["6 months", "3 months", "month"].includes(currentStep.step)) {
+  //       widthToAdd = monthWidth;
+  //     } else {
+  //       // day step
+  //       widthToAdd = daysInMonth * dayWidth;
+  //     }
+
+  //     if (totalWidth + widthToAdd > needleX) {
+  //       // The needle is within this month
+  //       const daysIntoMonth = Math.floor(
+  //         (needleX - totalWidth) / (widthToAdd / daysInMonth)
+  //       );
+  //       tempDate.setDate(tempDate.getDate() + daysIntoMonth);
+  //       break;
+  //     }
+
+  //     totalWidth += widthToAdd;
+  //     tempDate.setMonth(tempDate.getMonth() + 1);
+  //     monthIndex++;
+
+  //     if (currentStep.step === "year" && monthIndex % 12 === 0) {
+  //       tempDate.setFullYear(tempDate.getFullYear() + 1);
+  //     }
+  //   }
+
+  //   // Ensure the date doesn't go beyond the end date
+  //   if (tempDate > endDate) {
+  //     tempDate = new Date(endDate);
+  //   } else if (tempDate < startDate) {
+  //     tempDate = new Date(startDate);
+  //   }
+
+  //   setCurrentDate(tempDate);
+  //   return tempDate;
+  // };
+
+  const calculateDateForYearView = (needleX: number) => {
+    const containerWidth = timelineRef.current?.clientWidth || 0;
+    const totalDays = Math.floor(
+      (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24)
+    );
+    const pixelsPerDay = containerWidth / totalDays;
+
+    const daysPassed = Math.floor(needleX / pixelsPerDay);
+    let tempDate = new Date(startDate);
+    tempDate.setDate(tempDate.getDate() + daysPassed);
+
+    // Ensure the date doesn't go beyond the end date or before the start date
+    if (tempDate > endDate) {
+      tempDate = new Date(endDate);
+    } else if (tempDate < startDate) {
+      tempDate = new Date(startDate);
     }
 
-    let tempDate = new Date(startDate);
-    tempDate.setDate(tempDate.getDate() + totalDays);
     setCurrentDate(tempDate);
+    return tempDate;
   };
+
+  const calculateDateForMonthViews = (needleX: number) => {
+    const containerWidth = timelineRef.current?.scrollWidth || 0;
+    const totalMonths =
+      (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+      (endDate.getMonth() - startDate.getMonth());
+
+    let monthsToShow = totalMonths;
+    if (steps[currentStepIndex].step === "6 months") {
+      monthsToShow = Math.ceil(totalMonths / 6) * 6;
+    } else if (steps[currentStepIndex].step === "3 months") {
+      monthsToShow = Math.ceil(totalMonths / 3) * 3;
+    }
+
+    const pixelsPerMonth = containerWidth / monthsToShow;
+
+    const monthsPassed = Math.floor(needleX / pixelsPerMonth);
+    let tempDate = new Date(startDate);
+    tempDate.setMonth(tempDate.getMonth() + monthsPassed);
+
+    // Adjust for day of month
+    const daysInMonth = new Date(
+      tempDate.getFullYear(),
+      tempDate.getMonth() + 1,
+      0
+    ).getDate();
+    const dayPosition = (needleX % pixelsPerMonth) / pixelsPerMonth;
+    const dayOfMonth = Math.floor(dayPosition * daysInMonth) + 1;
+    tempDate.setDate(dayOfMonth);
+
+    // Ensure the date doesn't go beyond the end date or before the start date
+    if (tempDate > endDate) {
+      tempDate = new Date(endDate);
+    } else if (tempDate < startDate) {
+      tempDate = new Date(startDate);
+    }
+
+    setCurrentDate(tempDate);
+    return tempDate;
+  };
+
+  const calculateDateForDayView = (needleX: number) => {
+    const containerWidth = timelineRef.current?.scrollWidth || 0;
+    const totalDays = Math.floor(
+      (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24)
+    );
+    const pixelsPerDay = containerWidth / totalDays;
+
+    const daysPassed = Math.floor(needleX / pixelsPerDay);
+    let tempDate = new Date(startDate);
+    tempDate.setDate(tempDate.getDate() + daysPassed);
+
+    // Adjust for time of day
+    const dayFraction = (needleX % pixelsPerDay) / pixelsPerDay;
+    const hoursInDay = Math.floor(dayFraction * 24);
+    const minutesInHour = Math.floor((dayFraction * 24 - hoursInDay) * 60);
+    tempDate.setHours(hoursInDay, minutesInHour);
+
+    // Ensure the date doesn't go beyond the end date or before the start date
+    if (tempDate > endDate) {
+      tempDate = new Date(endDate);
+    } else if (tempDate < startDate) {
+      tempDate = new Date(startDate);
+    }
+
+    setCurrentDate(tempDate);
+    return tempDate;
+  };
+
+  const calculateCurrentDate = (needleX: number) => {
+    if (steps[currentStepIndex].step === "year") {
+      calculateDateForYearView(needleX);
+    } else if (
+      ["6 months", "3 months", "month"].includes(steps[currentStepIndex].step)
+    ) {
+      calculateDateForMonthViews(needleX);
+    } else if (steps[currentStepIndex].step === "day") {
+      calculateDateForDayView(needleX);
+    }
+  };
+
   useEffect(() => {
     const generateTimelineData = () => {
       let currentDate = new Date(startDate);
@@ -182,11 +313,35 @@ const Timeline = () => {
     };
   }, []);
 
+  const calculateXFromDate = (
+    date: Date,
+    monthWidth: number,
+    dayWidth: number
+  ) => {
+    const daysDiff = Math.floor(
+      (date.getTime() - startDate.getTime()) / (1000 * 3600 * 24)
+    );
+    const currentStep = steps[currentStepIndex];
+    let newX = 0;
+
+    if (currentStep.step === "year") {
+      newX = (daysDiff / 365) * monthWidth * 12;
+    } else if (["6 months", "3 months", "month"].includes(currentStep.step)) {
+      newX = (daysDiff / 30) * monthWidth;
+    } else {
+      // day step
+      newX = daysDiff * dayWidth;
+    }
+
+    return newX;
+  };
+
   const handlePinch = (delta: number) => {
     const newMonthWidth = Math.min(
       Math.max(monthWidth * delta, MIN_MONTH_WIDTH),
       MAX_MONTH_WIDTH
     );
+
     const newDayWidth = dayWidth * (newMonthWidth / monthWidth);
 
     setMonthWidth(newMonthWidth);
@@ -204,6 +359,9 @@ const Timeline = () => {
       setMonthWidth(INITIAL_MONTH_WIDTH);
       setDayWidth(INITIAL_DAY_WIDTH);
     }
+
+    const newX = calculateXFromDate(currentDate, newMonthWidth, newDayWidth);
+    setX(newX);
   };
 
   const bind = useGesture(
@@ -218,17 +376,19 @@ const Timeline = () => {
   );
 
   return (
-    <div className="bg-zinc-900  px-4 h-screen flex flex-col items-center justify-center">
+    <div className="bg-zinc-900 gap-4 px-4 h-screen flex flex-col items-center justify-center">
+      <p className="text-zinc-400 text-2xl">
+        {currentDate.toLocaleDateString()}
+      </p>
       <div
         {...bind()}
         ref={timelineRef}
         style={{
           touchAction: "none",
         }}
-        className="border relative p-4 min-h-72 border-zinc-700 rounded-xl shadow-lg bg-gradient-to-br from-zinc-900 to-zinc-950 overflow-auto h-36 flex items-start justify-evenly text-zinc-400 w-full"
+        className="border relative p-4 min-h-72 border-zinc-700 rounded-xl shadow-lg bg-gradient-to-br from-zinc-900 to-zinc-950 overflow-auto h-36 flex items-start justify-between text-zinc-400 w-full"
       >
         <Rnd
-          bounds={"parent"}
           position={{
             x: x,
             y: 60,
@@ -250,7 +410,7 @@ const Timeline = () => {
           return (
             <div
               key={`${item.year}-${item.month}`}
-              className="flex flex-col items-center gap-4 justify-center"
+              className="flex flex-col px-4 items-center gap-4 justify-center"
             >
               <div
                 style={{
