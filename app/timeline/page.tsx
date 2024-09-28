@@ -304,13 +304,17 @@ const Timeline = () => {
 
   useEffect(() => {
     const preventDefault = (e: TouchEvent) => {
-      e.preventDefault();
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
     };
 
     document.addEventListener("touchmove", preventDefault, { passive: false });
+    document.addEventListener("touchstart", preventDefault, { passive: false });
 
     return () => {
       document.removeEventListener("touchmove", preventDefault);
+      document.removeEventListener("touchstart", preventDefault);
     };
   }, []);
 
@@ -345,6 +349,7 @@ const Timeline = () => {
 
     const newDayWidth = dayWidth * (newMonthWidth / monthWidth);
 
+    // Calculate the new X position based on the current date and new zoom level
     setMonthWidth(newMonthWidth);
     setDayWidth(newDayWidth);
 
@@ -367,7 +372,10 @@ const Timeline = () => {
 
   const bind = useGesture(
     {
-      onPinch: ({ offset: [d], movement: [md], memo }) => {
+      onPinch: ({ event, offset: [d], movement: [md], memo }) => {
+        if (event instanceof TouchEvent) {
+          event.preventDefault();
+        }
         handlePinch(d);
       },
     },
@@ -491,3 +499,4 @@ const Needle = () => {
 };
 
 export default Timeline;
+
